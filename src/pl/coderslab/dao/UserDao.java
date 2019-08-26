@@ -11,15 +11,15 @@ import java.util.Arrays;
 
 public class UserDao {
 
-    private static final String CREATE_QUERY = "INSERT INTO users (username, email, password, group_id) VALUE (?,?,?,?)";
+    private static final String CREATE_QUERY = "INSERT INTO users (username, email, password, user_group_id) VALUE (?,?,?,?)";
     private static final String READ_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String UPDATE_QUERY = "UPDATE user SET username = ?, email = ?, password = ?, group_id = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE users SET username = ?, email = ?, password = ?, user_group_id = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
 
     public User create(User user) {
-        try (Connection connection = DBUtil.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getUserName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
@@ -28,6 +28,7 @@ public class UserDao {
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next())
                 user.setId(resultSet.getInt(1));
+            resultSet.close();
             return user;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,8 +37,8 @@ public class UserDao {
     }
 
     public User read(int id) {
-        try (Connection connection = DBUtil.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(READ_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_QUERY);) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -47,8 +48,9 @@ public class UserDao {
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setGroupId(resultSet.getInt("group_id"));
+                resultSet.close();
+                return user;
             }
-            return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -57,8 +59,8 @@ public class UserDao {
 
     public void update(User user) {
 
-        try (Connection connection = DBUtil.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY)) {
             preparedStatement.setString(1, user.getUserName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
@@ -71,8 +73,8 @@ public class UserDao {
     }
 
     public void delete(int id) {
-        try (Connection connection = DBUtil.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_QUERY)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -81,8 +83,8 @@ public class UserDao {
     }
 
     public User[] findAll() {
-        try (Connection connection = DBUtil.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY);
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             User[] users = new User[0];
             while (resultSet.next()) {
@@ -94,6 +96,7 @@ public class UserDao {
                 user.setGroupId(resultSet.getInt("group_id"));
                 users = addToArray(user, users);
             }
+            resultSet.close();
             return users;
         } catch (SQLException ex) {
             ex.printStackTrace();
