@@ -1,2 +1,2 @@
 # skola_programowania
-CL Skola pProgramowania
+CL Skola Programowania
