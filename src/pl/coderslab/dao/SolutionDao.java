@@ -12,11 +12,13 @@ import java.util.List;
 
 public class SolutionDao {
 
-    private static final String CREATE_QUERY = "insert into solution (created, updated, description, exercise_id, users_id) values (?,?,?,?,?);";
+    private static final String CREATE_QUERY = "insert into solution (created, updated, description, exercise_id, users_id) values (?,?,?,?,?)";
     private static final String READ_QUERY = "select * from solution where id = ?";
     private static final String UPRATE_QUERY = "update solution set created = ?, updated = ?, description = ?, exercise_id = ?, users_id = ? where id = ?";
     private static final String DELETE_QUERY = "delete from solution where id = ?";
     private static final String FIND_ALL_QUERY = "select * from solution";
+    private static final String FIND_ALL_BY_USER_ID_QUERY = "select * from solution where users_id = ?";
+    private static final String FIND_ALL_BY_EXERCISE_ID_QUERY = "select * from solution where exercise_id = ? order by created DESC";
 
     public Solution create(Solution solution) {
         try (Connection connection = DBUtil.getConnection();
@@ -98,6 +100,32 @@ public class SolutionDao {
         }
     }
 
+    public List<Solution> findAllByUserId(int userId) {
+        return getSolutions(userId, FIND_ALL_BY_USER_ID_QUERY);
+    }
+
+    public List<Solution> findAllByExerciseId(int exerciseId) {
+        return getSolutions(exerciseId, FIND_ALL_BY_EXERCISE_ID_QUERY);
+    }
+    //metoda dla poprania tablicy rozwiązań
+    private List<Solution> getSolutions(int id, String query) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            List<Solution> solutionList = new ArrayList<>();
+            Solution solution = new Solution();
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                setSolution(solution, resultSet);
+                solutionList.add(solution);
+            }
+            resultSet.close();
+            return solutionList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     //metoda dla przypisania wszystkich pól clasy
     private void setSolution(Solution solution, ResultSet resultSet) throws SQLException {
         solution.setId(resultSet.getInt("id"));
