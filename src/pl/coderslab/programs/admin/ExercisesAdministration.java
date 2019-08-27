@@ -14,7 +14,7 @@ public class ExercisesAdministration {
         int choice;
 
         do {
-            printUsers(exerciseDao);
+            printExercises(exerciseDao);
             choice = getChoice(scanner);
             switch (choice) {
                 case 1:
@@ -80,8 +80,11 @@ public class ExercisesAdministration {
         exerciseDao.delete(id);
     }
 
-    private static void printUsers(ExerciseDao exerciseDao) {
+    private static void printExercises(ExerciseDao exerciseDao) {
         List<Exercise> exerciseList = exerciseDao.findAll();
+        System.out.println("------------------");
+        System.out.println("TABLE OF EXERCISES");
+        System.out.println("------------------");
         System.out.printf("%4s | %20s | %30s |%n", "ID", "TITLE", "DESCRIPTION");
         for (Exercise exercise : exerciseList) {
             System.out.printf("%4d | %20s | %30s |%n", exercise.getId(), exercise.getTitle(), exercise.getDescription());

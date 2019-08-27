@@ -112,6 +112,9 @@ public class UsersAdministration {
 
     private static void printUsers(UserDao userDao) {
         User[] userList = userDao.findAll();
+        System.out.println("--------------");
+        System.out.println("TABLE OF USERS");
+        System.out.println("--------------");
         System.out.printf("%4s | %20s | %30s | %60s | %8s |%n", "ID", "USER NAME", "EMAIL", "PASSWORD", "GROUP ID");
         for (User user : userList) {
             System.out.printf("%4d | %20s | %30s | %60s | %8d |%n", user.getId(), user.getUserName(), user.getEmail(), user.getPassword(), user.getGroupId());

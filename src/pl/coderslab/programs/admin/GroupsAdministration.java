@@ -76,6 +76,9 @@ public class GroupsAdministration {
 
     private static void printUserGroups(UserGroupDao userGroupDao) {
         List<UserGroup> userGroupList = userGroupDao.findAll();
+        System.out.println("---------------");
+        System.out.println("TABLE OF GROUPS");
+        System.out.println("---------------");
         System.out.printf("%4s | %20s |%n", "ID", "USER GROUP NAME");
         for (UserGroup userGroup : userGroupList) {
             System.out.printf("%4d | %20s |%n", userGroup.getId(), userGroup.getName());

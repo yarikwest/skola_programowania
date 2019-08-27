@@ -107,15 +107,15 @@ public class SolutionDao {
     public List<Solution> findAllByExerciseId(int exerciseId) {
         return getSolutions(exerciseId, FIND_ALL_BY_EXERCISE_ID_QUERY);
     }
-    //metoda dla poprania tablicy rozwiązań
+    //metoda dla pobrania tablicy rozwiązań
     private List<Solution> getSolutions(int id, String query) {
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             List<Solution> solutionList = new ArrayList<>();
-            Solution solution = new Solution();
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
+                Solution solution = new Solution();
                 setSolution(solution, resultSet);
                 solutionList.add(solution);
             }
