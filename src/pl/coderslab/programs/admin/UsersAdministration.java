@@ -127,12 +127,13 @@ public class UsersAdministration {
                 System.out.println("\t1.add \t2.edit \t3.delete \t4.quit");
                 choice = scanner.nextInt();
                 if (choice >= 1 && choice <= 4) {
+                    scanner.nextLine();
                     return choice;
                 } else
                     System.out.println("Input data is incorrect");
             } catch (InputMismatchException e) {
                 System.out.println("Input data is incorrect");
-                scanner.next();
+                scanner.nextLine();
             }
         }
     }

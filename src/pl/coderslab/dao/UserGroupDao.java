@@ -77,9 +77,9 @@ public class UserGroupDao {
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY)) {
             List<UserGroup> userGroupList = new ArrayList<>();
-            UserGroup userGroup = new UserGroup();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
+                UserGroup userGroup = new UserGroup();
                 userGroup.setId(resultSet.getInt("id"));
                 userGroup.setName(resultSet.getString("name"));
                 userGroupList.add(userGroup);
