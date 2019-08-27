@@ -50,7 +50,7 @@ public class UserDao {
                 user.setUserName(resultSet.getString("username"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
-                user.setGroupId(resultSet.getInt("group_id"));
+                user.setGroupId(resultSet.getInt("user_group_id"));
                 resultSet.close();
                 return user;
             }
@@ -96,7 +96,7 @@ public class UserDao {
                 user.setUserName(resultSet.getString("username"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
-                user.setGroupId(resultSet.getInt("group_id"));
+                user.setGroupId(resultSet.getInt("user_group_id"));
                 users = addToArray(user, users);
             }
             resultSet.close();
