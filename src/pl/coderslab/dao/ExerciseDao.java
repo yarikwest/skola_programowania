@@ -80,9 +80,9 @@ public class ExerciseDao {
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY)) {
             List<Exercise> exerciseList = new ArrayList<>();
-            Exercise exercise = new Exercise();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
+                Exercise exercise = new Exercise();
                 exercise.setId(resultSet.getInt("id"));
                 exercise.setTitle(resultSet.getString("title"));
                 exercise.setDescription(resultSet.getString("description"));
