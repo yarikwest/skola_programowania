@@ -17,6 +17,9 @@ public class ExerciseDao {
     private static final String UPDATE_QUERY = "update exercise set title = ?, description = ? where id = ?";
     private static final String DELETE_QUERY = "delete from exercise where id = ?";
     private static final String FIND_ALL_QUERY = "select * from exercise";
+    private static final String FIND_ALL_WHERE_USER_NOT_HAVE_SOLUTION_QUERY = "select e.id, e.title, e.description " +
+            "from exercise e left join solution s on e.id = s.exercise_id and s.users_id = ? where s.id is null";
+
 
     public Exercise create(Exercise exercise) {
         try (Connection connection = DBUtil.getConnection();
@@ -93,6 +96,27 @@ public class ExerciseDao {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public List<Exercise> findAllWhereUserNotHaveSolution(int userId) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_WHERE_USER_NOT_HAVE_SOLUTION_QUERY)) {
+            List<Exercise> exerciseList = new ArrayList<>();
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Exercise exercise = new Exercise();
+                exercise.setId(resultSet.getInt("id"));
+                exercise.setTitle(resultSet.getString("title"));
+                exercise.setDescription(resultSet.getString("description"));
+                exerciseList.add(exercise);
+            }
+            resultSet.close();
+            return exerciseList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return  null;
         }
     }
 }
